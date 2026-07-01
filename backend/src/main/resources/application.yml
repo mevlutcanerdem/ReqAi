@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: reqai-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/reqai_db
+    username: reqai_user
+    password: reqai_password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: 8080
