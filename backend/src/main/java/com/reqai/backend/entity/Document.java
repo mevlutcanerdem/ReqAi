@@ -23,5 +23,19 @@ public class Document extends BaseEntity{
     @OneToMany(mappedBy = "document",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Requirement> requirements = new ArrayList<>();
 
+    public String getFileName() {
+        return fileName;
+    }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
