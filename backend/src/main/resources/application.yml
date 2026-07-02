@@ -26,3 +26,18 @@ spring:
 
 server:
   port: 8080
+
+  kafka:
+      bootstrap-servers: localhost:9092
+      consumer:
+        group-id: reqai-group
+        auto-offset-reset: earliest
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+  data:
+      redis:
+        host: localhost
+        port: 6379
