@@ -26,9 +26,9 @@ public class DocumentController {
     public ResponseEntity<Document> uploadDocument(@RequestParam("file")MultipartFile file){
         try {
             Document savedDocument = documentService.saveDocument(file);
-            return ResponseEntity.ok(savedDocument);
+            return ResponseEntity.ok(savedDocument); // 200
         }catch (IOException e){
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().build(); // 500
         }
 
     }
