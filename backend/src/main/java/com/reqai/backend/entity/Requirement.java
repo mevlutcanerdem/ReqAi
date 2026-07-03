@@ -20,7 +20,12 @@ public class Requirement extends BaseEntity {
     @Column(columnDefinition = "TEXT",nullable = false)
     private String description;
 
+    @Column(name = "priority",length = 50)
     private String priority;
+
+    @Column(name = "complexity",length = 50)
+    private String complexity;
+
 
     @OneToMany(mappedBy = "requirement",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();

@@ -24,6 +24,7 @@ public class Task extends BaseEntity {
     @Column(columnDefinition = "TEXT",nullable = false)
     private String description;
 
+
     private String complexity;
 
     @OneToMany(mappedBy = "task",cascade = CascadeType.ALL,orphanRemoval = true)

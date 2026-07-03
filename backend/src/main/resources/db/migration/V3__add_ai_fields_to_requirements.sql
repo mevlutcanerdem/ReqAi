@@ -1,0 +1,1 @@
+ALTER TABLE requirements ADD COLUMN complexity VARCHAR(50);
