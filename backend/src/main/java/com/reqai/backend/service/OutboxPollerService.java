@@ -19,7 +19,7 @@ import static com.reqai.backend.entity.OutboxStatus.PROCESSED;
 public class OutboxPollerService {
 
     private final OutboxEventRepository outboxEventRepository;
-    private final KafkaTemplate<String,String> kafkaTemplate;
+    private final KafkaTemplate<String,Object> kafkaTemplate;
 
     @Scheduled(fixedDelay = 5000)
     @Transactional

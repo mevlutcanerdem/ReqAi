@@ -17,7 +17,7 @@ public interface OutboxEventRepository extends JpaRepository<OutboxEvent, UUID> 
     // race condition (bottleneck: instance A and instance B read the same rows and try to send message to kafka
     // and using the limit operation we won't get out of memory error
     @Query(value = """
-            SELECT * FROM outbox_events
+            SELECT * FROM outbox_event
             WHERE status = 'PENDING'
             ORDER BY created_at ASC
             FOR UPDATE SKIP LOCKED   
@@ -25,4 +25,5 @@ public interface OutboxEventRepository extends JpaRepository<OutboxEvent, UUID> 
             """,nativeQuery = true)
     List<OutboxEvent> findPendingEventsForProcessing();
     Optional<OutboxEvent> findByDocumentId(UUID documentId);
+
 }

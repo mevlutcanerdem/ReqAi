@@ -12,6 +12,8 @@ import java.util.UUID;
 @Setter
 public class OutboxEvent extends BaseEntity {
 
+
+
     @Column(name = "document_id",nullable = false)
     private UUID documentId;
 

@@ -7,12 +7,15 @@ import com.reqai.backend.entity.OutboxStatus;
 import com.reqai.backend.repository.DocumentRepository;
 
 import com.reqai.backend.repository.OutboxEventRepository;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @Service
 public class DocumentService {
@@ -26,6 +29,7 @@ public class DocumentService {
     }
 
     @Transactional
+    @CachePut(value = "documents",key = "#result.id")
     public Document saveDocument(MultipartFile file) throws IOException{
 
         if(file.isEmpty()){
@@ -48,5 +52,16 @@ public class DocumentService {
         outboxEventRepository.save(outboxEvent);
 
         return savedDocument;
+    }
+
+    // Redis implementation (Read from RAM )
+    // when user send a request to this method spring asks redis before. if document exist this method does not work
+    @Cacheable(value = "documents",key = "#id")
+    public Document getDocumentById(UUID id){
+        // (2.İSTEKTE GÖRÜLMEZ BU YAZI ÇÜNKÜ İLK İSTEKTE REDİSTE YOKSA BİLE İKİNCİ İSTEKTE VERİTABANINA KAYDEDİLİR VE KOPYASI REDİSE KAYDEDİLİR
+        System.out.println("VERİTABANINA İNİLDİ");
+
+        return documentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Document not found with id: "  + id));
     }
 }
