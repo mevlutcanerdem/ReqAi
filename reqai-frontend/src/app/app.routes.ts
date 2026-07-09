@@ -1,3 +1,13 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+// DİKKAT: .component yazılarını sildik, sadece klasör/dosya adı kaldı!
+import { UploadComponent } from './upload/upload';
+import { HistoryComponent } from './history/history';
+import { DetailComponent } from './detail/detail';
+
+export const routes: Routes = [
+  { path: '', redirectTo: '/history', pathMatch: 'full' },
+  { path: 'upload', component: UploadComponent },
+  { path: 'history', component: HistoryComponent },
+  { path: 'analysis/:id', component: DetailComponent }
+];

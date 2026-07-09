@@ -54,7 +54,7 @@ public class OpenAiService {
     private final RestClient restClient = RestClient.create();
 
     @Transactional // Ensures that if any database save fails, the whole process rolls back
-    public void analyzeAndSave(Document document) {
+    public String analyzeAndSave(Document document) {
         log.info("Sending document to OpenAI for analysis. Document ID: {}", document.getId());
 
         // STEP 1: Define the System Prompt
@@ -65,14 +65,18 @@ public class OpenAiService {
                 {
                   "requirements": [
                     {
+                      "title": "A short, clear title for the requirement",
                       "description": "Description of the business requirement",
                       "priority": "HIGH/MEDIUM/LOW",
                       "complexity": "HIGH/MEDIUM/LOW",
                       "tasks": [
                         {
+                          "title": "A short, clear title for the task",
                           "description": "Developer task description",
                           "testScenarios": [
-                            { "description": "Test scenario description" }
+                            { "description": "Test scenario description",
+                              "expectedResult": "Define what the expected outcome is"
+                             }
                           ]
                         }
                       ]
@@ -113,10 +117,13 @@ public class OpenAiService {
 
             log.info("OpenAI Analysis successfully completed and saved to the database!");
 
+            return aiJsonContent;
+
         } catch (Exception e) {
             log.error("Error occurred during OpenAI API call or database operation: {}", e.getMessage(), e);
             throw new RuntimeException("AI Analysis Failed", e);
         }
+
     }
 
     // Helper method to handle the hierarchical database inserts
@@ -125,6 +132,7 @@ public class OpenAiService {
 
         for (var aiReq : analysis.requirements()) {
             Requirement req = new Requirement();
+
             req.setDocument(document);
             req.setDescription(aiReq.description());
             req.setPriority(aiReq.priority());
@@ -134,6 +142,7 @@ public class OpenAiService {
             if (aiReq.tasks() == null) continue;
             for (var aiTask : aiReq.tasks()) {
                 Task task = new Task();
+                task.setTitle(aiTask.title());
                 task.setRequirement(savedReq);
                 task.setDescription(aiTask.description());
                 Task savedTask = taskRepository.save(task);
@@ -141,6 +150,7 @@ public class OpenAiService {
                 if (aiTask.testScenarios() == null) continue;
                 for (var aiTest : aiTask.testScenarios()) {
                     TestScenario test = new TestScenario();
+                    test.setExpectedResult(aiTest.expectedResult());
                     test.setTask(savedTask);
                     test.setDescription(aiTest.description());
                     // Not: Orijinal kodunuzda testScenarioRepository tipini en üstte doğrulamayı unutmayın

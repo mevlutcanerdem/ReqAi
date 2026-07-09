@@ -8,7 +8,6 @@ CREATE TABLE documents(
 CREATE TABLE requirements(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     document_id UUID NOT NULL,
-    title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     priority VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
