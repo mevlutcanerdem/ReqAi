@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 1. EKLENDİ
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -12,15 +12,18 @@ import { DatePipe } from '@angular/common';
 export class HistoryComponent implements OnInit {
   documents: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  // 2. ChangeDetectorRef constructor içine eklendi
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.http.get<any>('http://localhost:8081/api/v1/documents')
       .subscribe({
         next: (data) => {
-          // Eğer veri string olarak geldiyse JSON objesine (diziye) çevir
           this.documents = typeof data === 'string' ? JSON.parse(data) : data;
           console.log("Tabloya basılacak veri adedi:", this.documents.length);
+
+          // 3. İŞTE SİHİRLİ DEĞNEK: Angular'ı dürt ve ekranı çizdir!
+          this.cdr.detectChanges();
         },
         error: (err) => console.error("Hata:", err)
       });

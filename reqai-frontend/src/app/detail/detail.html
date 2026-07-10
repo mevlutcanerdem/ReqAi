@@ -1,46 +1,43 @@
-@if (analysisDetail) {
-<div style="max-width: 1000px; margin: 40px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+<div style="max-width: 950px; margin: 40px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-  <div style="margin-bottom: 30px; text-align: center;">
-    <h2 style="color: #1565c0;">📄 {{ analysisDetail.fileName }}</h2>
-    <a routerLink="/history" style="text-decoration: none; color: #1976d2; font-weight: bold;">⬅ Back to History</a>
+  <div style="margin-bottom: 25px;">
+    <a routerLink="/history" style="text-decoration: none; color: #1976d2; font-weight: bold; padding: 10px 20px; background: #e3f2fd; border-radius: 8px; transition: background 0.3s; display: inline-block;">
+      ← Back to History
+    </a>
   </div>
 
-  <div style="background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 20px; margin-bottom: 40px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-    <h3 style="color: #f57f17; margin-top: 0; border-bottom: 1px solid #ffe082; padding-bottom: 10px;">📜 Original Customer Document</h3>
-    <pre style="white-space: pre-wrap; font-family: inherit; color: #424242; font-size: 0.95rem; line-height: 1.5;">{{ analysisDetail.originalContent }}</pre>
-  </div>
+  @if (analysisDetail && analysisDetail.analysisResult) {
+  <div style="padding: 30px; border: 2px solid #2e7d32; border-radius: 12px; background-color: #f1f8e9; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+    <h2 style="color: #1b5e20; border-bottom: 2px solid #c8e6c9; padding-bottom: 15px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+      <span>🚀</span> Enterprise AI Analysis Results
+    </h2>
 
-  <div style="padding: 25px; border: 2px solid #2e7d32; border-radius: 12px; background-color: #f1f8e9;">
-    <h2 style="color: #1b5e20; border-bottom: 2px solid #c8e6c9; padding-bottom: 15px; margin-bottom: 25px;">🚀 Enterprise AI Analysis Results</h2>
+    @for (req of analysisDetail.analysisResult; track $index) {
+    <div style="background: white; border-radius: 10px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 8px rgba(0,0,0,0.06); border-left: 6px solid #4caf50;">
+      <h3 style="color: #2e7d32; margin-top: 0; font-size: 1.25rem; line-height: 1.5;">📋 {{ req.description }}</h3>
 
-    @for (req of analysisDetail.analysisResults; track req) {
-    <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #4caf50;">
-
-      <h3 style="color: #2e7d32; margin-top: 0; font-size: 1.2rem; line-height: 1.4;">📋 {{ req.description }}</h3>
-
-      <div style="margin: 15px 0;">
-        <span style="background: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-right: 10px;">⚡ Priority: {{ req.priority }}</span>
-        <span style="background: #fff3e0; color: #e65100; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;">🧠 Complexity: {{ req.complexity }}</span>
+      <div style="margin: 15px 0 20px 0;">
+        <span style="background: #e8f5e9; color: #2e7d32; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; margin-right: 10px; border: 1px solid #c8e6c9;">⚡ Priority: {{ req.priority }}</span>
+        <span style="background: #fff3e0; color: #e65100; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; border: 1px solid #ffe0b2;">🧠 Complexity: {{ req.complexity }}</span>
       </div>
 
       @if (req.tasks && req.tasks.length > 0) {
-      <div style="margin-top: 20px; padding: 15px; background: #fafafa; border-radius: 8px; border: 1px solid #eeeeee;">
-        <h4 style="color: #1976d2; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px;">👨‍💻 Developer Tasks</h4>
+      <div style="margin-top: 20px; padding: 20px; background: #fafafa; border-radius: 8px; border: 1px solid #eeeeee;">
+        <h4 style="color: #1976d2; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">👨‍💻 Developer Tasks</h4>
 
-        @for (task of req.tasks; track task) {
-        <div style="margin-bottom: 20px;">
-          <div style="font-weight: bold; color: #424242; font-size: 1.05rem;">🔹 {{ task.title }}</div>
-          <div style="color: #616161; margin-top: 5px; margin-bottom: 10px; font-size: 0.95rem;">{{ task.description }}</div>
+        @for (task of req.tasks; track $index) {
+        <div style="margin-bottom: 25px;">
+          <div style="font-weight: 700; color: #424242; font-size: 1.05rem;">🔹 {{ task.title }}</div>
+          <div style="color: #616161; margin-top: 5px; margin-bottom: 12px; font-size: 0.95rem; line-height: 1.5;">{{ task.description }}</div>
 
           @if (task.testScenarios && task.testScenarios.length > 0) {
-          <div style="margin-left: 20px; padding-left: 15px; border-left: 2px solid #ffca28;">
-            <div style="font-weight: 600; color: #f57c00; font-size: 0.9rem; margin-bottom: 5px;">🧪 Test Scenarios</div>
-            <ul style="margin: 0; padding-left: 20px; color: #555; font-size: 0.9rem;">
-              @for (test of task.testScenarios; track test) {
+          <div style="margin-left: 20px; padding: 15px; border-left: 3px solid #ffca28; background-color: #fffde7; border-radius: 0 8px 8px 0;">
+            <div style="font-weight: 700; color: #f57c00; font-size: 0.95rem; margin-bottom: 8px;">🧪 Test Scenarios</div>
+            <ul style="margin: 0; padding-left: 20px; color: #424242; font-size: 0.9rem; line-height: 1.6;">
+              @for (test of task.testScenarios; track $index) {
               <li style="margin-bottom: 8px;">
                 <strong>Action:</strong> {{ test.description }} <br>
-                <span style="color: #388e3c;"><strong>Expect:</strong> {{ test.expectedResult }}</span>
+                <span style="color: #2e7d32;"><strong>Expect:</strong> {{ test.expectedResult }}</span>
               </li>
               }
             </ul>
@@ -53,9 +50,12 @@
     </div>
     }
   </div>
-</div>
-} @else {
-  <div style="text-align: center; margin-top: 50px; font-size: 1.2rem; color: #666;">
-    Loading analysis details... ⏳
+  } @else {
+  <div style="text-align: center; margin-top: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div style="border: 4px solid rgba(25, 118, 210, 0.1); width: 50px; height: 50px; border-radius: 50%; border-left-color: #1976d2; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+    <style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
+    <h3 style="color: #1565c0; font-weight: 600; margin: 0;">Loading analysis details... ⏳</h3>
+    <p style="color: #757575; font-size: 0.9rem; margin-top: 8px;">Fetching data from the server</p>
   </div>
-}
+  }
+</div>

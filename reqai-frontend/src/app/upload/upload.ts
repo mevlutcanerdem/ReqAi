@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { DocumentService } from '../services/document.service';
 
 @Component({
@@ -11,7 +11,7 @@ export class UploadComponent {
   selectedFile: File | null = null;
   analysisResult: any = null;
 
-  constructor(private documentService: DocumentService) {}
+  constructor(private documentService: DocumentService, private cdr: ChangeDetectorRef) {}
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -19,33 +19,33 @@ export class UploadComponent {
       this.selectedFile = file;
     }
   }
+isAnalyzing: boolean = false;
+startAnalysis(): void {
+  if (this.selectedFile) {
+    this.isAnalyzing = true; // Yükleme başladı!
+    this.cdr.detectChanges();
 
-  startAnalysis(): void {
-    if (this.selectedFile) {
-      console.log('Step 1: Sending file to backend (POST)...');
-
-      this.documentService.uploadDocument(this.selectedFile).subscribe({
-        next: (savedDocument: any) => {
-          console.log('Step 2: File saved successfully. Document ID:', savedDocument.id);
-          console.log('Step 3: Connecting to SSE stream to listen for AI results...');
-
-          this.documentService.listenToAnalysis(savedDocument.id).subscribe({
-            next: (aiResult: any) => {
-              console.log('Step 4: AI Results received via SSE:', aiResult);
-              this.analysisResult = typeof aiResult === 'string' ? JSON.parse(aiResult) : aiResult;
-              alert('AI Analysis completed successfully!');
-            },
-            error: (streamErr: any) => {
-              console.error('Error while streaming data:', streamErr);
-              alert('Failed to receive analysis results.');
-            }
-          });
-        },
-        error: (uploadErr: any) => {
-          console.error('File upload error: ', uploadErr);
-          alert('Failed to upload file!');
-        }
-      });
-    }
+    this.documentService.uploadDocument(this.selectedFile).subscribe({
+      next: (savedDocument: any) => {
+        this.documentService.listenToAnalysis(savedDocument.id).subscribe({
+          next: (aiResult: any) => {
+            this.analysisResult = typeof aiResult === 'string' ? JSON.parse(aiResult) : aiResult;
+            this.isAnalyzing = false; // Yükleme bitti!
+            this.cdr.detectChanges();
+          },
+          error: (streamErr: any) => {
+            console.error(streamErr);
+            this.isAnalyzing = false; // Hata olsa da loading'i kapat
+            this.cdr.detectChanges();
+          }
+        });
+      },
+      error: (uploadErr: any) => {
+        console.error(uploadErr);
+        this.isAnalyzing = false; // Hata olsa da loading'i kapat
+        this.cdr.detectChanges();
+      }
+    });
   }
+}
 }

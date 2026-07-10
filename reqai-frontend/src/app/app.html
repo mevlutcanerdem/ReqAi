@@ -1,7 +1,20 @@
+<nav style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 15px 40px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.2); color: white; position: sticky; top: 0; z-index: 1000;">
 
-<nav>
-  <a routerLink="/history">Past Analysis</a> |
-  <a routerLink="/upload">Upload new file</a>
+  <div style="font-family: 'Segoe UI', sans-serif; font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;">
+    <span style="background: #00e676; color: #000; padding: 4px 8px; border-radius: 6px; font-size: 1.2rem;">AI</span>
+    <span>Req<span style="color: #64b5f6;">Core</span></span>
+  </div>
+
+  <div style="display: flex; gap: 25px; font-family: 'Segoe UI', sans-serif; font-weight: 600;">
+    <a routerLink="/upload" style="color: #e0e0e0; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.color='#e0e0e0'; this.style.background='transparent'">
+      + New Analysis
+    </a>
+    <a routerLink="/history" style="color: #e0e0e0; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.color='#e0e0e0'; this.style.background='transparent'">
+      📋 History Dashboard
+    </a>
+  </div>
 </nav>
 
-<router-outlet></router-outlet>
+<main style="background-color: #f4f7f6; min-height: calc(100vh - 70px); padding-top: 20px;">
+  <router-outlet></router-outlet>
+</main>

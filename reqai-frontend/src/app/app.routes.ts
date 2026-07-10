@@ -6,7 +6,7 @@ import { HistoryComponent } from './history/history';
 import { DetailComponent } from './detail/detail';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/history', pathMatch: 'full' },
+  { path: '', redirectTo: '/upload', pathMatch: 'full' },
   { path: 'upload', component: UploadComponent },
   { path: 'history', component: HistoryComponent },
   { path: 'analysis/:id', component: DetailComponent }

@@ -10,6 +10,7 @@ import com.reqai.backend.repository.DocumentRepository;
 
 import com.reqai.backend.repository.OutboxEventRepository;
 import com.reqai.backend.repository.RequirementRepository;
+import org.reactivestreams.Publisher;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
@@ -109,7 +110,7 @@ public class DocumentService {
         return documentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Document not found with id: "  + id));
     }
-
+    @Transactional(readOnly = true)
     public DocumentDetailDto getDocumentDetails(UUID id){
 
         // 1. retrieve main document and original content
