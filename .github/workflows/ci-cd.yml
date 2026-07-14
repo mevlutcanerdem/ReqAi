@@ -1,0 +1,46 @@
+name: Reqai CI/CD pipeline
+
+# bu robot ne zaman çalışacak
+on:
+  push:
+    branches:
+      - develop-clean
+
+jobs:
+  build-and-test:
+    name: Compile and test the code
+    runs-on: ubuntu-latest #  githubun verdigi ücretsiz sunucu
+
+    steps:
+      #kodları githubdan ücretsiz sunucuya çekme  islemi
+      - name: pull the code
+        uses: actions/checkout@v3
+
+      # sunucuya java 21 kur
+      - name: java 21 setup
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # kodu derle ve .jar dosyasını uret
+      - name: compile via maven
+        working-directory: ./backend
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: mvn clean package -DskipTests
+
+      # Docker huba giriş yap (secrets username ve password ile )
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+         username: "${{ secrets.DOCKER_USERNAME }}"
+         password: "${{ secrets.DOCKER_PASSWORD }}"
+
+      # Docker imajını oluştur ve docker huba gönder
+      - name: Build Docker image and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          push: true
+          tags: mevlutcanerdem/reqai-backend:latest

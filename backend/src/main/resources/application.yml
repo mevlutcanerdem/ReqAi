@@ -55,10 +55,12 @@ management:
 openai:
   api:
     url: https://api.groq.com/openai/v1/chat/completions
-    key:
+    key: ${SECRET_KEY}
     model: llama-3.3-70b-versatile
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
+
+
