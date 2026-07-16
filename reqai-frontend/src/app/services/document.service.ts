@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DocumentService {
-  private baseUrl = 'http://localhost:8081/api/v1/documents';
+  private baseUrl = 'https://reqaiweb.onrender.com/api/v1/documents';
 
   constructor(private http: HttpClient) {}
 

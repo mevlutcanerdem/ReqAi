@@ -16,7 +16,7 @@ export class HistoryComponent implements OnInit {
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.http.get<any>('http://localhost:8081/api/v1/documents')
+    this.http.get<any>('https://reqaiweb.onrender.com/api/v1/documents')
       .subscribe({
         next: (data) => {
           this.documents = typeof data === 'string' ? JSON.parse(data) : data;

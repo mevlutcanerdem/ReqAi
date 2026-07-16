@@ -19,7 +19,7 @@ export class DetailComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.http.get(`http://localhost:8081/api/v1/documents/${id}/analysis`)
+    this.http.get(`https://reqaiweb.onrender.com/api/v1/documents/${id}/analysis`)
       .subscribe({
         next: (data) => {
           console.log("Backendden gelen ham veri:", data); // Verinin tipini konsolda görelim
