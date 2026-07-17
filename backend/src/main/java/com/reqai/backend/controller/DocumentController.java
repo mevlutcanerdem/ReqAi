@@ -3,6 +3,7 @@ package com.reqai.backend.controller;
 import com.reqai.backend.dto.DocumentDetailDto;
 import com.reqai.backend.dto.DocumentSummaryDto;
 import com.reqai.backend.entity.Document;
+import com.reqai.backend.repository.DocumentRepository;
 import com.reqai.backend.service.DocumentService;
 import com.reqai.backend.service.SseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import javax.print.Doc;
+import java.io.DataInput;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +31,7 @@ public class DocumentController {
 
     private final DocumentService documentService;
     private final SseService sseService;
+    private final DocumentRepository documentRepository;
 
     @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload a TXT file",description = "Customer upload requirement document and it starts the analyzing process on the back side")
@@ -59,6 +64,20 @@ public class DocumentController {
     public ResponseEntity<List<DocumentSummaryDto>> getAllDocuments(){
         List<DocumentSummaryDto> documents = documentService.getAllDocuments();
         return ResponseEntity.ok(documents);
+    }
+    @GetMapping("/history")
+    public ResponseEntity<List<Document>> getUserDocument(Principal principal){
+        // principal security i geçmiş ve içeri girmiş kullanııcnın kimlik kartıdır
+
+        // 1 read username from card
+        String currentUsername = principal.getName();
+
+        // 2. Get the document just he has
+        List<Document> userDocuments = documentRepository.findByUser_Username(currentUsername);
+
+        // send it to frontend safely
+        return ResponseEntity.ok(userDocuments);
+
     }
 
 }

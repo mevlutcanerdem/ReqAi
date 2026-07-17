@@ -1,21 +1,21 @@
 package com.reqai.backend.service;
 
-
 import com.reqai.backend.dto.*;
 import com.reqai.backend.entity.Document;
 import com.reqai.backend.entity.OutboxEvent;
 import com.reqai.backend.entity.OutboxStatus;
 import com.reqai.backend.entity.Requirement;
+import com.reqai.backend.entity.User; // EKLENDİ
 import com.reqai.backend.repository.DocumentRepository;
-
 import com.reqai.backend.repository.OutboxEventRepository;
 import com.reqai.backend.repository.RequirementRepository;
-import org.reactivestreams.Publisher;
+import com.reqai.backend.repository.UserRepository; // EKLENDİ
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContextHolder; // EKLENDİ
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,17 +34,21 @@ public class DocumentService {
     private final SseService sseService;
     private final OpenAiService openAiService;
     private final RequirementRepository requirementRepository;
+    private final UserRepository userRepository; // 1. EKLENDİ
 
-    public DocumentService(DocumentRepository documentRepository, OutboxEventRepository outboxEventRepository, SseService sseService, OpenAiService openAiService, RequirementRepository requirementRepository) {
+    // Constructor güncellendi
+    public DocumentService(DocumentRepository documentRepository, OutboxEventRepository outboxEventRepository, SseService sseService, OpenAiService openAiService, RequirementRepository requirementRepository, UserRepository userRepository) {
         this.documentRepository = documentRepository;
         this.outboxEventRepository = outboxEventRepository;
         this.sseService = sseService;
         this.openAiService = openAiService;
         this.requirementRepository = requirementRepository;
+        this.userRepository = userRepository; // 2. EKLENDİ
     }
-        // main thread
+
+    // main thread
     @Transactional
-    @CachePut(value = "documents",key = "#result.id")
+    @CachePut(value = "documents", key = "#result.id")
     public Document saveFileOnly(MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
@@ -54,10 +58,19 @@ public class DocumentService {
 
         String content = new String(file.getBytes(), StandardCharsets.UTF_8);
 
-        // save document to database    and create an id
+        // 3. Güvenlik kapısından (JWT) geçmiş kullanıcının adını yakala
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 4. Bu ismi veritabanından bulup gerçek User objesini çek
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+
+        // save document to database and create an id
         Document document = new Document();
         document.setFileName(file.getOriginalFilename());
         document.setContent(content);
+        document.setUser(currentUser); // 5. İŞTE 500 HATASINI ÇÖZEN O KRİTİK SATIR!
+
         Document savedDocument = documentRepository.save(document);
 
         OutboxEvent outboxEvent = new OutboxEvent();
@@ -68,7 +81,7 @@ public class DocumentService {
         return savedDocument;
     }
 
-   // BACKGROUND METHOD (Run by a Background Worker)
+    // BACKGROUND METHOD (Run by a Background Worker)
     @Async  // Tomcatin ana threadini meşgul etmeyen sihirli notasyon
     public void startAsyncAnalysis(UUID documentId,Document document){
         try {
@@ -88,10 +101,15 @@ public class DocumentService {
 
         }
     }
+
     public List<DocumentSummaryDto> getAllDocuments(){
+        // 1. İsteği atan (token'ı olan) kullanıcının adını al
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         // we're retrieving the documents in reverse chronological order
-        return documentRepository.findAll(Sort.by(Sort.Direction.DESC,"createdAt"))
+        return documentRepository.findByUser_Username(currentUsername)
                 .stream()
+                // Tarihe göre tersten sıralama işlemi stream içinde yapılabilir
+                .sorted((d1, d2) -> d2.getCreatedAt().compareTo(d1.getCreatedAt()))
                 .map(doc -> new DocumentSummaryDto(
                         doc.getId(),
                         doc.getFileName(),
@@ -110,13 +128,21 @@ public class DocumentService {
         return documentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Document not found with id: "  + id));
     }
+
     @Transactional(readOnly = true)
     public DocumentDetailDto getDocumentDetails(UUID id){
+        // 1. İsteği atan kullanıcının adını al
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // 1. retrieve main document and original content
         Document document = documentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Document not found"));
+        if (!document.getUser().getUsername().equals(currentUsername)) {
+            // Eğer başkasının belgesine ID ile erişmeye çalışırsa 403 Forbidden fırlat
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu belgeye erişim yetkiniz yok.");
 
+        }
+        // 4. İzinler tamamsa detayları çek ve DTO'ya çevir
         // 2. retrieve all requirements and sub relationships depend on this document
         List<Requirement> requirements = requirementRepository.findByDocumentId(document.getId());
 

@@ -23,19 +23,9 @@ public class Document extends BaseEntity{
     @OneToMany(mappedBy = "document",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Requirement> requirements = new ArrayList<>();
 
-    public String getFileName() {
-        return fileName;
-    }
+    // logic :many document has one user many-to-one relation
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }
