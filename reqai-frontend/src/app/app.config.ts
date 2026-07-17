@@ -6,6 +6,9 @@ import { routes } from './app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient()
+    provideHttpClient(),
+    provideHttpClient(
+          withInterceptors([authInterceptor]) // İŞTE BU KANCAYLA SİSTEME BAĞLADIK!
+        )
   ]
 };
