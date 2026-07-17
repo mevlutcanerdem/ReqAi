@@ -3,6 +3,7 @@ package com.reqai.backend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,6 +33,8 @@ public class SecurityConfig {
                 // hangi odalara kimler girebilir
                 .authorizeHttpRequests(auth -> auth
 
+                        // optionsa izin ver
+                                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 // sadece api/v1/auth ile başlayan odalar herkese açık  (login / register)
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                         // geri kalan tüm isteklere token şart (belge yükleme / geçmiş görüntüleme)
