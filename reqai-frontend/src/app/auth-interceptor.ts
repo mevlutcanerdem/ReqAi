@@ -9,7 +9,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = getStoredToken();
   const isAuthRequest = req.url.includes('/api/v1/auth/');
 
-  const authReq = token
+  // Auth isteklerine (register/login) token EKLEME! Sadece korumalı endpointlere ekle.
+  const authReq = (token && !isAuthRequest)
     ? req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -29,3 +30,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+
