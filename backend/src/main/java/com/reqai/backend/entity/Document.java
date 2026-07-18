@@ -21,11 +21,13 @@ public class Document extends BaseEntity{
 
     // one document has many requirements one-to-many relation
     @OneToMany(mappedBy = "document",cascade = CascadeType.ALL,orphanRemoval = true)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Requirement> requirements = new ArrayList<>();
 
     // logic :many document has one user many-to-one relation
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
 }
