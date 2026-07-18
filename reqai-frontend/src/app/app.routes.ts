@@ -6,7 +6,7 @@ import { HistoryComponent } from './history/history';
 import { DetailComponent } from './detail/detail';
 import { LoginComponent } from './pages/login/login';
 import { RegisterComponent } from './pages/register/register'; // Kayıt sayfasını ekledik
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   // 1. AÇIK ROTALAR (Herkes Girebilir)

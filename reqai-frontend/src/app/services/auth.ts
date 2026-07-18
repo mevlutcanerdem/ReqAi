@@ -19,7 +19,7 @@ export class AuthService {
   }
 
   // 2. Giriş Yapma Metodu
-  authenticate(userData: any): Observable<any> {
+  login(userData: any): Observable<any> {
     // Backend'in /authenticate (veya login) ucuna verileri POST ediyoruz
     return this.http.post(`${this.apiUrl}/authenticate`, userData);
   }
