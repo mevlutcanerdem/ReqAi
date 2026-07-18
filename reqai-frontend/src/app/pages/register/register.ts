@@ -28,10 +28,10 @@ export class RegisterComponent {
     this.errorMessage = '';
 
     this.authService.register(this.registerData).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.router.navigate(['/login']);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMessage = 'Kayıt işlemi başarısız oldu. Kullanıcı adı alınmış olabilir.';
         this.isLoading = false;
       }

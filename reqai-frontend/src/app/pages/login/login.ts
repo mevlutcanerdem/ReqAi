@@ -23,14 +23,14 @@ export class LoginComponent {
     this.errorMessage = '';
 
     this.authService.login(this.loginData).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         // 1. Gelen token'ı Local Storage'a kaydet (Interceptor buradan alacak)
         localStorage.setItem('reqai_token', response.token);
 
         // 2. Başarılı girişte ana sayfaya veya analiz sayfasına yönlendir
         this.router.navigate(['/']);
       },
-      error: (err) => {
+      error: (err: any) => {
         // Hata durumunda kullanıcıya şık bir mesaj göster
         this.errorMessage = 'Giriş başarısız. Kullanıcı adı veya şifrenizi kontrol edin.';
         this.isLoading = false;
