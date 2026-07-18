@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     // register process
+    @Transactional
     public AuthenticationResponse register(RegisterRequest request){
         User user = new User();
         user.setUsername(request.username());
@@ -42,6 +44,7 @@ public class AuthenticationService {
     }
 
     // login process
+    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         // springsecurity bizim yerimize şifre eşleşiyor mu diye bakar
         authenticationManager.authenticate(

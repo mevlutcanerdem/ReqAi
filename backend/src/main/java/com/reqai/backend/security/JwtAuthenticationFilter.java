@@ -58,18 +58,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // ── KALICI API TOKEN KONTROLÜ (reqai_ ile başlıyorsa) ──
         if (token.startsWith("reqai_")) {
-            if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                Optional<User> optionalUser = userRepository.findByToken(token);
-                if (optionalUser.isPresent()) {
-                    User user = optionalUser.get();
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            user.getAuthorities()
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+            try {
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                    Optional<User> optionalUser = userRepository.findByToken(token);
+                    if (optionalUser.isPresent()) {
+                        User user = optionalUser.get();
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                user,
+                                null,
+                                user.getAuthorities()
+                        );
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                        System.out.println("API Token ile kimlik doğrulama başarılı: " + user.getUsername());
+                    } else {
+                        System.out.println("API Token veritabanında bulunamadı: " + token.substring(0, Math.min(token.length(), 15)) + "...");
+                    }
                 }
+            } catch (Exception ex) {
+                System.out.println("API Token doğrulama hatası: " + ex.getMessage());
+                SecurityContextHolder.clearContext();
             }
             filterChain.doFilter(request, response);
             return;

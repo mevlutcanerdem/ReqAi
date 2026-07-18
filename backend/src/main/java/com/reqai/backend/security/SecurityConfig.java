@@ -32,8 +32,8 @@ public class SecurityConfig {
                 // 1 . CSRF korumasını kapatıyoruz çünkü jwt kullanıyoruz
                 .csrf(csrf -> csrf.disable())
 
-                // cors ayarları aynı kalsın
-                .cors(Customizer.withDefaults())
+                // cors ayarları - açıkça bağlıyoruz
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 // hangi odalara kimler girebilir
                 .authorizeHttpRequests(auth -> auth
