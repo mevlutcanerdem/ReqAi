@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { getStoredToken } from '../utils/token.util';
 
 @Injectable({
   providedIn: 'root'
@@ -20,14 +21,25 @@ export class DocumentService {
     return this.http.post(`${this.baseUrl}/upload`, formData);
   }
 
+  getHistory(): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl);
+  }
+
+  getAnalysisDetails(documentId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${documentId}/analysis`);
+  }
+
   /**
    * Connects to the Server-Sent Events (SSE) stream using the document ID.
    * Listens asynchronously for the backend AI analysis result.
    */
   listenToAnalysis(documentId: string): Observable<any> {
     return new Observable((subscriber) => {
-      // Establish the unidirectional SSE connection with the browser's native EventSource API
-      const eventSource = new EventSource(`${this.baseUrl}/stream/${documentId}`);
+      const token = getStoredToken();
+      const streamUrl = token
+        ? `${this.baseUrl}/stream/${documentId}?token=${encodeURIComponent(token)}`
+        : `${this.baseUrl}/stream/${documentId}`;
+      const eventSource = new EventSource(streamUrl);
 
       // Listen for the specific custom event named 'analysis-result' fired by SseService
       eventSource.addEventListener('analysis-result', (event: MessageEvent) => {

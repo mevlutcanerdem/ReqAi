@@ -26,7 +26,6 @@ import java.util.UUID;
 @RequestMapping("/api/v1/documents")
 @Tag(name = "1. Document Controller " , description = "Uploading file and AI analyzing transactions")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class DocumentController {
 
     private final DocumentService documentService;

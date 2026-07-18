@@ -1,19 +1,23 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { clearStoredToken, getStoredToken, isTokenExpired } from '../utils/token.util';
 
-export const authGuard: CanActivateFn = (route, state) => {
-  // Angular'ın yönlendirme servisini (Router) içeri alıyoruz
+export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
+  const token = getStoredToken();
 
-  // Tarayıcının hafızasına bakıyoruz, giriş yaparken koyduğumuz token orada mı?
-  const token = localStorage.getItem('reqai_token');
-
-  if (token) {
-    // Token varsa: "Geçebilirsin, kapı açık!"
-    return true;
-  } else {
-    // Token yoksa: "Biletin yok, hemen Login sayfasına dön!"
+  if (!token) {
     router.navigate(['/login']);
     return false;
   }
+
+  if (isTokenExpired(token)) {
+    clearStoredToken();
+    router.navigate(['/login'], {
+      queryParams: { reason: 'session-expired' }
+    });
+    return false;
+  }
+
+  return true;
 };

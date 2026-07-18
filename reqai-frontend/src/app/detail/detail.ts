@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../services/document.service';
 
 @Component({
   selector: 'app-detail',
@@ -10,32 +10,32 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DetailComponent implements OnInit {
   analysisDetail: any = null;
+  errorMessage = '';
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
+    private documentService: DocumentService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.http.get(`https://reqaiweb.onrender.com/api/v1/documents/${id}/analysis`)
-      .subscribe({
-        next: (data) => {
-          console.log("Backendden gelen ham veri:", data); // Verinin tipini konsolda görelim
+    if (!id) {
+      return;
+    }
 
-          let parsedData = typeof data === 'string' ? JSON.parse(data) : data;
-
-          // Eğer backend doğrudan bir array (dizi) dönüyorsa, onu objeye saralım
-          if (Array.isArray(parsedData)) {
-            this.analysisDetail = { requirements: parsedData };
-          } else {
-            this.analysisDetail = parsedData;
-          }
-
-          this.cdr.detectChanges();
-        },
-        error: (err) => console.error("Detay çekilirken hata:", err)
-      });
+    this.documentService.getAnalysisDetails(id).subscribe({
+      next: (data) => {
+        const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+        this.analysisDetail = Array.isArray(parsedData)
+          ? { requirements: parsedData }
+          : parsedData;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Analiz detayları yüklenemedi veya bu belgeye erişim yetkiniz yok.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

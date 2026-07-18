@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 // Bu sınıf, kullanıcının şifresini kriptolayıp veritabanına kaydetme
 // ve giriş yaparken şifresini doğrulayıp Token üretme işini yapacak.
@@ -29,17 +30,20 @@ public class AuthenticationService {
         // şifreyi bycrpt ile şifreliyoruz
         user.setPassword(passwordEncoder.encode(request.password()));
 
+        // Kalıcı API token üret (reqai_ ön ekiyle)
+        String apiToken = "reqai_" + UUID.randomUUID().toString().replace("-", "");
+        user.setToken(apiToken);
+
         // database e kaydet
         userRepository.save(user);
 
-        // kayıt olan kullanıcıya hemen token üret
-        String jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse(jwtToken);
+        // kayıt olan kullanıcıya kalıcı API token'ını ver
+        return new AuthenticationResponse(apiToken);
     }
 
     // login process
     public AuthenticationResponse authenticate(AuthenticationRequest request){
-        // sprinsecurity bizim yerimize şifre eşleşiyor mu diye bakar
+        // springsecurity bizim yerimize şifre eşleşiyor mu diye bakar
         authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.username(),request.password())
         );
@@ -47,9 +51,15 @@ public class AuthenticationService {
         // hata fırlatmazsa şifre doğrudur kullanıcıyı veri tabanından bul
         User user = userRepository.findByUsername(request.username()).orElseThrow();
 
-        // yeni bir token üret ve ver
-        String jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse(jwtToken);
+        // Eğer kullanıcının henüz kalıcı token'ı yoksa üret ve kaydet
+        if (user.getToken() == null || user.getToken().isBlank()) {
+            String apiToken = "reqai_" + UUID.randomUUID().toString().replace("-", "");
+            user.setToken(apiToken);
+            userRepository.save(user);
+        }
+
+        // kullanıcının kalıcı API token'ını ver
+        return new AuthenticationResponse(user.getToken());
     }
 
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { saveStoredToken } from '../../utils/token.util';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,6 @@ import { AuthService } from '../../services/auth';
   styleUrls: ['./register.scss']
 })
 export class RegisterComponent {
-  // Artık backend ile tam uyumlu!
   registerData = {
     username: '',
     password: ''
@@ -28,11 +28,15 @@ export class RegisterComponent {
     this.errorMessage = '';
 
     this.authService.register(this.registerData).subscribe({
-      next: (response: any) => {
-        this.router.navigate(['/login']);
+      next: (response: { token: string }) => {
+        saveStoredToken(response.token);
+        this.router.navigate(['/upload']);
       },
-      error: (err: any) => {
+      error: () => {
         this.errorMessage = 'Kayıt işlemi başarısız oldu. Kullanıcı adı alınmış olabilir.';
+        this.isLoading = false;
+      },
+      complete: () => {
         this.isLoading = false;
       }
     });

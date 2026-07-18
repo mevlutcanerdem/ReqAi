@@ -27,6 +27,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;    // BCyrtp ile kaydedecez veritabnaına
 
+    @Column(unique = true)
+    private String token;       // Kalıcı API token
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));

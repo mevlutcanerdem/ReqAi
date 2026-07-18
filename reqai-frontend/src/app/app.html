@@ -5,13 +5,21 @@
     <span>Req<span style="color: #64b5f6;">Core</span></span>
   </div>
 
-  <div style="display: flex; gap: 25px; font-family: 'Segoe UI', sans-serif; font-weight: 600;">
-    <a routerLink="/upload" style="color: #e0e0e0; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.color='#e0e0e0'; this.style.background='transparent'">
-      + New Analysis
-    </a>
-    <a routerLink="/history" style="color: #e0e0e0; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.color='#e0e0e0'; this.style.background='transparent'">
-      📋 History Dashboard
-    </a>
+  <div style="display: flex; gap: 25px; align-items: center; font-family: 'Segoe UI', sans-serif; font-weight: 600;">
+    @if (authenticated) {
+      <a routerLink="/upload" style="color: #e0e0e0; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.color='#e0e0e0'; this.style.background='transparent'">
+        + New Analysis
+      </a>
+      <a routerLink="/history" style="color: #e0e0e0; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.color='#e0e0e0'; this.style.background='transparent'">
+        📋 History Dashboard
+      </a>
+      <button type="button" (click)="logout()" style="background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.25); padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+        Çıkış
+      </button>
+    } @else {
+      <a routerLink="/login" style="color: #e0e0e0; text-decoration: none; padding: 8px 12px; border-radius: 6px;">Giriş</a>
+      <a routerLink="/register" style="background: #1976d2; color: white; text-decoration: none; padding: 8px 14px; border-radius: 6px;">Kayıt Ol</a>
+    }
   </div>
 </nav>
 

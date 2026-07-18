@@ -11,4 +11,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     // güvenlik görevlisi veritabanından kullanıcıyı ismiyle rahat bulsun diye
     Optional<User> findByUsername(String username);
+
+    // kalıcı API token ile kullanıcıyı bul
+    Optional<User> findByToken(String token);
 }

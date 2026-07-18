@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { saveStoredToken } from '../../utils/token.util';
 
 @Component({
   selector: 'app-login',
@@ -11,28 +12,37 @@ import { AuthService } from '../../services/auth';
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginData = { username: '', password: '' };
   errorMessage = '';
   isLoading = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    if (this.route.snapshot.queryParamMap.get('reason') === 'session-expired') {
+      this.errorMessage = 'Oturumunuz sona erdi. Lütfen tekrar giriş yapın.';
+    }
+  }
 
   onSubmit() {
     this.isLoading = true;
     this.errorMessage = '';
 
     this.authService.login(this.loginData).subscribe({
-      next: (response: any) => {
-        // 1. Gelen token'ı Local Storage'a kaydet (Interceptor buradan alacak)
-        localStorage.setItem('reqai_token', response.token);
-
-        // 2. Başarılı girişte ana sayfaya veya analiz sayfasına yönlendir
-        this.router.navigate(['/']);
+      next: (response: { token: string }) => {
+        saveStoredToken(response.token);
+        this.router.navigate(['/upload']);
       },
       error: (err: any) => {
-        // Hata durumunda kullanıcıya şık bir mesaj göster
         this.errorMessage = 'Giriş başarısız. Kullanıcı adı veya şifrenizi kontrol edin.';
+        this.isLoading = false;
+      },
+      complete: () => {
         this.isLoading = false;
       }
     });
