@@ -4,8 +4,8 @@ import { Routes } from '@angular/router';
 import { UploadComponent } from './upload/upload';
 import { HistoryComponent } from './history/history';
 import { DetailComponent } from './detail/detail';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component'; // Kayıt sayfasını ekledik
+import { LoginComponent } from './pages/login/login';
+import { RegisterComponent } from './pages/register/register'; // Kayıt sayfasını ekledik
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [

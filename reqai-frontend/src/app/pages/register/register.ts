@@ -8,8 +8,8 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  templateUrl: './register.html',
+  styleUrls: ['./register.scss']
 })
 export class RegisterComponent {
   // Artık backend ile tam uyumlu!
