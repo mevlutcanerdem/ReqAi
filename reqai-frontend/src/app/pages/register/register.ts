@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { saveStoredToken } from '../../utils/token.util';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +18,7 @@ export class RegisterComponent {
   };
 
   errorMessage = '';
+  successMessage = '';
   isLoading = false;
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -26,11 +26,15 @@ export class RegisterComponent {
   onSubmit() {
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
     this.authService.register(this.registerData).subscribe({
-      next: (response: { token: string }) => {
-        saveStoredToken(response.token);
-        this.router.navigate(['/upload']);
+      next: () => {
+        // Token'ı kaydetmiyoruz! Kullanıcı login'den giriş yapsın.
+        this.successMessage = 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...';
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
       },
       error: () => {
         this.errorMessage = 'Kayıt işlemi başarısız oldu. Kullanıcı adı alınmış olabilir.';
