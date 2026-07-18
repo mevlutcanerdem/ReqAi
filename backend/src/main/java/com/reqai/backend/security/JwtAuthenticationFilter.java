@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String username;
 
         // eğer başlık yoksa veya "bearer " ile başlamıyorsa bu adamda bileklik yok demektir sal gitsin
-        if (authHeader == null || !authHeader.startsWith("bearer ")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }

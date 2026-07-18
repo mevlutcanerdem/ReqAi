@@ -1,0 +1,47 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="brand-header">
+      <h2><span class="highlight">Req</span>AI</h2>
+      <p>Tekrar hoş geldiniz! Lütfen bilgilerinizi girin.</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="input-group">
+        <label for="username">Kullanıcı Adı</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="loginData.username"
+          required
+          placeholder="Kullanıcı adınızı girin">
+      </div>
+
+      <div class="input-group">
+        <label for="password">Şifre</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="loginData.password"
+          required
+          placeholder="••••••••">
+      </div>
+
+      <!-- Hata Mesajı Alanı -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Butonu ve Yükleniyor Animasyonu -->
+      <button type="submit" class="btn-primary" [disabled]="!loginForm.valid || isLoading">
+        <span *ngIf="!isLoading">Giriş Yap</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Hesabınız yok mu? <a routerLink="/register">Hemen Kaydolun</a></p>
+    </div>
+  </div>
+</div>
