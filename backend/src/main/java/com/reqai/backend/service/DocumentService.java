@@ -97,7 +97,9 @@ public class DocumentService {
             System.out.println("Analysis completed,It sent to angular from sse ");
 
         }catch (Exception e){
-            sseService.sendEvent(documentId.toString(),"{ \"error\": \"An error occurred while analysing.\"}");
+            // Send the actual error message to help debugging
+            String safeError = e.getMessage().replace("\"", "'").replace("\n", " ");
+            sseService.sendEvent(documentId.toString(),"{ \"error\": \"Analysis failed: " + safeError + "\"}");
 
         }
     }
