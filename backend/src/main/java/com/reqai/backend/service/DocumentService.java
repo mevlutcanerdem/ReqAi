@@ -120,9 +120,9 @@ public class DocumentService {
                 .toList();
     }
 
-    // Redis implementation (Read from RAM )
-    // when user send a request to this method spring asks redis before. if document exist this method does not work
-    // @Cacheable(value = "documents",key = "#id")
+    // Redis implementation (Read from RAM)
+    // When a user requests this method, Spring checks Redis first. If the document exists in Redis, this method is skipped.
+    @org.springframework.cache.annotation.Cacheable(value = "documents", key = "#id")
     public Document getDocumentById(UUID id){
         // (2.İSTEKTE GÖRÜLMEZ BU YAZI ÇÜNKÜ İLK İSTEKTE REDİSTE YOKSA BİLE İKİNCİ İSTEKTE VERİTABANINA KAYDEDİLİR VE KOPYASI REDİSE KAYDEDİLİR
         System.out.println("VERİTABANINA İNİLDİ");

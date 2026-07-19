@@ -4,6 +4,7 @@ import { DocumentService } from '../services/document.service';
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.html',
+  styleUrl: './upload.css',
   standalone: true,
   imports: []
 })
