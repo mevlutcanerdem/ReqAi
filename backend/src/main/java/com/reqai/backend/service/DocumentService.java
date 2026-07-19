@@ -89,10 +89,10 @@ public class DocumentService {
 
             // we connect to OpenAPI
             // This process may result in around 5,15 second , main thread is free meanwhile
-            String aiResultJson = openAiService.analyzeAndSave(document);
+            AiAnalysisResponse aiResult = openAiService.analyzeAndSave(document);
 
             // we send json data turning from AI to the angular via sse
-            sseService.sendEvent(documentId.toString(),aiResultJson);
+            sseService.sendEvent(documentId.toString(), aiResult);
 
             System.out.println("Analysis completed,It sent to angular from sse ");
 

@@ -54,7 +54,7 @@ public class OpenAiService {
     private final RestClient restClient = RestClient.create();
 
     @Transactional // Ensures that if any database save fails, the whole process rolls back
-    public String analyzeAndSave(Document document) {
+    public AiAnalysisResponse analyzeAndSave(Document document) {
         log.info("Sending document to OpenAI for analysis. Document ID: {}", document.getId());
 
         // STEP 1: Define the System Prompt
@@ -117,7 +117,7 @@ public class OpenAiService {
 
             log.info("OpenAI Analysis successfully completed and saved to the database!");
 
-            return aiJsonContent;
+            return analysis;
 
         } catch (Exception e) {
             log.error("Error occurred during OpenAI API call or database operation: {}", e.getMessage(), e);
