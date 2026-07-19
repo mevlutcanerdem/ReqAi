@@ -16,6 +16,7 @@ public class SseService {
 
     // The safe list we keep costumer id's and their sse pipelines
     private final Map<String, SseEmitter> emitters  = new ConcurrentHashMap<String, SseEmitter>();
+    private final Map<String, Object> pendingEvents = new ConcurrentHashMap<String, Object>();
 
          // This method will run when the frontend says, “I'm here, connect the pipeline”
         public SseEmitter createEmitter(String documentId){
@@ -30,6 +31,16 @@ public class SseService {
             emitter.onTimeout(()-> emitters.remove(documentId));
             emitter.onError((e) -> emitters.remove(documentId));
 
+            // If an event arrived before the emitter was created, send it immediately
+            if (pendingEvents.containsKey(documentId)) {
+                try {
+                    emitter.send(SseEmitter.event().name("analysis-result").data(pendingEvents.remove(documentId)));
+                    emitter.complete();
+                } catch (IOException e) {
+                    emitters.remove(documentId);
+                }
+            }
+
             return emitter;
         }
 
@@ -42,6 +53,9 @@ public class SseService {
                 }catch (IOException e){
                     emitters.remove(documentId);
                 }
+            } else {
+                // Emitter not yet connected, store it temporarily
+                pendingEvents.put(documentId, eventData);
             }
     }
 }
