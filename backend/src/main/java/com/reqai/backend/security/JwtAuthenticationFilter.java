@@ -58,9 +58,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // ── KALICI API TOKEN KONTROLÜ (reqai_ ile başlıyorsa) ──
         if (token.startsWith("reqai_")) {
+            System.out.println("[AUTH-FILTER] reqai_ token algılandı. URI: " + request.getRequestURI());
+            System.out.println("[AUTH-FILTER] Token: " + token.substring(0, Math.min(token.length(), 20)) + "...");
             try {
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     Optional<User> optionalUser = userRepository.findByToken(token);
+                    System.out.println("[AUTH-FILTER] Token DB araması sonucu: " + (optionalUser.isPresent() ? "BULUNDU" : "BULUNAMADI"));
                     if (optionalUser.isPresent()) {
                         User user = optionalUser.get();
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -70,15 +73,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         );
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
-                        System.out.println("API Token ile kimlik doğrulama başarılı: " + user.getUsername());
+                        System.out.println("[AUTH-FILTER] ✅ Kimlik doğrulama BAŞARILI: " + user.getUsername());
                     } else {
-                        System.out.println("API Token veritabanında bulunamadı: " + token.substring(0, Math.min(token.length(), 15)) + "...");
+                        System.out.println("[AUTH-FILTER] ❌ Token veritabanında bulunamadı!");
                     }
+                } else {
+                    System.out.println("[AUTH-FILTER] Zaten kimliği doğrulanmış: " + SecurityContextHolder.getContext().getAuthentication().getName());
                 }
             } catch (Exception ex) {
-                System.out.println("API Token doğrulama hatası: " + ex.getMessage());
+                System.out.println("[AUTH-FILTER] ❌ Token doğrulama HATASI: " + ex.getClass().getSimpleName() + " - " + ex.getMessage());
+                ex.printStackTrace();
                 SecurityContextHolder.clearContext();
             }
+            System.out.println("[AUTH-FILTER] Son auth durumu: " + (SecurityContextHolder.getContext().getAuthentication() != null ? "AUTHENTICATED" : "ANONYMOUS"));
             filterChain.doFilter(request, response);
             return;
         }

@@ -34,15 +34,16 @@ public class DocumentController {
 
     @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload a TXT file",description = "Customer upload requirement document and it starts the analyzing process on the back side")
-    public ResponseEntity<Document> uploadDocument(@RequestParam("file")MultipartFile file) throws IOException {
+    public ResponseEntity<DocumentSummaryDto> uploadDocument(@RequestParam("file")MultipartFile file) throws IOException {
         // 1.Step : just save file to database and take its ID
         Document savedDoc = documentService.saveFileOnly(file);
 
         // 2. Step : throw AI analysis to back side (fire and forget)
         documentService.startAsyncAnalysis(savedDoc.getId(),savedDoc);
 
-        // return response to costumer
-        return ResponseEntity.accepted().body(savedDoc);
+        // Entity yerine DTO dön - LazyInitializationException'ı tamamen engeller
+        DocumentSummaryDto dto = new DocumentSummaryDto(savedDoc.getId(), savedDoc.getFileName(), savedDoc.getCreatedAt());
+        return ResponseEntity.accepted().body(dto);
     }
     @GetMapping(value = "/stream/{documentId}")
     public SseEmitter streamEvents(@PathVariable String documentId){

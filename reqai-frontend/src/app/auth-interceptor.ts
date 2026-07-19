@@ -20,7 +20,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (!isAuthRequest && (error.status === 401 || error.status === 403)) {
+      // Sadece 401 (Unauthorized) durumunda token'ı sil ve login'e yönlendir.
+      // 403 (Forbidden) token'ın geçersiz olduğu anlamına gelmeyebilir
+      // (ör: backend'de başka bir hata Spring Security'nin /error sayfasını tetikleyebilir).
+      if (!isAuthRequest && error.status === 401) {
         clearStoredToken();
         router.navigate(['/login'], {
           queryParams: { reason: 'session-expired' }

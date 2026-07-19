@@ -42,6 +42,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 // sadece api/v1/auth ile başlayan odalar herkese açık  (login / register)
                                 .requestMatchers("/api/v1/auth/**").permitAll()
+                        // Spring'in hata sayfasına da erişime izin ver (aksi halde controller hatası 403 olarak maskelenir)
+                                .requestMatchers("/error").permitAll()
                         // geri kalan tüm isteklere token şart (belge yükleme / geçmiş görüntüleme)
                                 .anyRequest().authenticated()
 
