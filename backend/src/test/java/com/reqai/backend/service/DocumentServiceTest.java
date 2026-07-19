@@ -84,22 +84,22 @@ class DocumentServiceTest {
         verify(outboxEventRepository).save(any(OutboxEvent.class));
 
     }
-            // Ai analizi başarılı olursa happy path
+    // Ai analizi başarılı olursa happy path
     @Test
     void shouldSendAiResultViaSse_WhenAnalysisSuccessfull(){
         // we have document id and document object
         UUID docId = UUID.randomUUID();
         Document mockDoc = new Document();
-        String fakeAiJson= "{ \"requirements\": [] }";
+        com.reqai.backend.dto.AiAnalysisResponse fakeAiResponse = new com.reqai.backend.dto.AiAnalysisResponse(java.util.List.of());
 
-        // kuralımız openaiService.analyzeAndSave(mockDock) çağırıldığında fakeAiJson döndür.
-        when(openAiService.analyzeAndSave(mockDoc)).thenReturn(fakeAiJson);
+        // kuralımız openaiService.analyzeAndSave(mockDock) çağırıldığında fakeAiResponse döndür.
+        when(openAiService.analyzeAndSave(mockDoc)).thenReturn(fakeAiResponse);
 
         // call the method
         documentService.startAsyncAnalysis(docId,mockDoc);
 
-        // then : SseService in sendEvent metodu docId.toString ve fakeAi json ile 1 kere çağırılmış olmalı
-        verify(sseService,times(1)).sendEvent(docId.toString(),fakeAiJson);
+        // then : SseService in sendEvent metodu docId.toString ve fakeAiResponse ile 1 kere çağırılmış olmalı
+        verify(sseService,times(1)).sendEvent(docId.toString(),fakeAiResponse);
 
     }
 
