@@ -29,7 +29,10 @@ export class HistoryComponent implements OnInit {
     this.isLoading = true;
     this.documentService.getHistory().subscribe({
       next: (data) => {
-        this.documents = Array.isArray(data) ? data : [];
+        this.documents = Array.isArray(data) ? data.map(doc => ({
+          ...doc,
+          uploadDate: doc.uploadDate ? doc.uploadDate + 'Z' : doc.uploadDate
+        })) : [];
         this.isLoading = false;
         this.cdr.detectChanges();
       },
