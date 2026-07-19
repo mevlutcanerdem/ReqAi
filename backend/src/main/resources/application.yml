@@ -55,7 +55,7 @@ management:
 openai:
   api:
     url: https://api.groq.com/openai/v1/chat/completions
-    key: ${SECRET_KEY}
+    key: ${OPENAI_API_KEY}
     model: llama-3.3-70b-versatile
 
 logging:
