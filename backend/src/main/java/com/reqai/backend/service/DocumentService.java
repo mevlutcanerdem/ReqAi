@@ -48,7 +48,7 @@ public class DocumentService {
 
     // main thread
     @Transactional
-    @CachePut(value = "documents", key = "#result.id")
+    // @CachePut(value = "documents", key = "#result.id")
     public Document saveFileOnly(MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
@@ -120,7 +120,7 @@ public class DocumentService {
 
     // Redis implementation (Read from RAM )
     // when user send a request to this method spring asks redis before. if document exist this method does not work
-    @Cacheable(value = "documents",key = "#id")
+    // @Cacheable(value = "documents",key = "#id")
     public Document getDocumentById(UUID id){
         // (2.İSTEKTE GÖRÜLMEZ BU YAZI ÇÜNKÜ İLK İSTEKTE REDİSTE YOKSA BİLE İKİNCİ İSTEKTE VERİTABANINA KAYDEDİLİR VE KOPYASI REDİSE KAYDEDİLİR
         System.out.println("VERİTABANINA İNİLDİ");
