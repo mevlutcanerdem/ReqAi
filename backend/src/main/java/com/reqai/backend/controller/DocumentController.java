@@ -59,6 +59,13 @@ public class DocumentController {
         return ResponseEntity.ok(detail);
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a document", description = "Deletes the document and its analysis results")
+    public ResponseEntity<Void> deleteDocument(@PathVariable UUID id) {
+        documentService.deleteDocument(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     @Operation(summary = "List all documents",description = "Returns a list of all documents with their basic info.")
     public ResponseEntity<List<DocumentSummaryDto>> getAllDocuments(){

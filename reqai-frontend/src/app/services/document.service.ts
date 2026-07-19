@@ -29,6 +29,10 @@ export class DocumentService {
     return this.http.get(`${this.baseUrl}/${documentId}/analysis`);
   }
 
+  deleteDocument(documentId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${documentId}`);
+  }
+
   /**
    * Connects to the Server-Sent Events (SSE) stream using the document ID.
    * Listens asynchronously for the backend AI analysis result.

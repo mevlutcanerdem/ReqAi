@@ -1,12 +1,14 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DocumentService } from '../services/document.service';
+import { TranslatePipe } from '../utils/translate.pipe';
 
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.html',
   styleUrl: './upload.css',
   standalone: true,
-  imports: []
+  imports: [CommonModule, TranslatePipe]
 })
 export class UploadComponent {
   selectedFile: File | null = null;

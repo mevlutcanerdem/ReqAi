@@ -172,4 +172,19 @@ public class DocumentService {
         );
 
     }
+
+    @org.springframework.cache.annotation.CacheEvict(value = "documents", key = "#id")
+    @Transactional
+    public void deleteDocument(UUID id) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        Document document = documentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found"));
+                
+        if (!document.getUser().getUsername().equals(currentUsername)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu belgeyi silme yetkiniz yok.");
+        }
+        
+        documentRepository.delete(document);
+    }
 }

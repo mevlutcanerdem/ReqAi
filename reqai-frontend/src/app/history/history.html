@@ -1,40 +1,57 @@
-<div style="max-width: 900px; margin: 50px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-
-  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1976d2; padding-bottom: 15px; margin-bottom: 30px;">
-    <h2 style="color: #1565c0; margin: 0;">📋 Past Analyses ({{ documents.length }} Found)</h2>
-    <a routerLink="/upload" style="background-color: #1976d2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold;">+ New Analysis</a>
+<div class="upload-container" style="max-width: 1000px; margin: 40px auto;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 20px;">
+    <h2 class="results-header" style="border: none; padding: 0; margin: 0;">
+      <span>📋</span> {{ 'history.title' | translate }} <span style="font-size: 1.2rem; color: #64748b; font-weight: 500; margin-left: 10px;">({{ documents.length }} {{ 'history.found' | translate }})</span>
+    </h2>
+    <a routerLink="/upload" class="btn-primary" style="padding: 12px 24px; font-size: 1rem; text-decoration: none;">
+      {{ 'history.btn_new' | translate }}
+    </a>
   </div>
 
   @if (isLoading) {
-    <p style="text-align: center; color: #616161;">Yükleniyor...</p>
+    <div class="loading-wrapper">
+      <div class="spinner"></div>
+      <p class="loading-text">{{ 'history.loading' | translate }}</p>
+      <span class="loading-subtext">{{ 'history.loading_sub' | translate }}</span>
+    </div>
   } @else if (errorMessage) {
-    <p style="text-align: center; color: #c62828;">{{ errorMessage }}</p>
+    <div class="error-card">
+      <h2 class="error-title">❌ Error</h2>
+      <p class="error-msg">{{ errorMessage }}</p>
+    </div>
   }
 
-  <table style="width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden;">
-    <thead style="background-color: #f5f5f5;">
-    <tr>
-      <th style="padding: 15px; text-align: left; color: #424242; font-weight: 600;">Document Name</th>
-      <th style="padding: 15px; text-align: left; color: #424242; font-weight: 600;">Upload Date</th>
-      <th style="padding: 15px; text-align: center; color: #424242; font-weight: 600;">Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    @if (documents.length === 0) {
-    <tr>
-      <td colspan="3" style="text-align: center; padding: 30px; color: #757575;">No documents analyzed yet. Upload a file to get started!</td>
-    </tr>
-    }
+  <div class="upload-card" style="padding: 20px; max-width: 1000px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left;">
+      <thead>
+        <tr>
+          <th style="padding: 15px 20px; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0;">{{ 'history.col_name' | translate }}</th>
+          <th style="padding: 15px 20px; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0;">{{ 'history.col_date' | translate }}</th>
+          <th style="padding: 15px 20px; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0; text-align: center;">{{ 'history.col_action' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (documents.length === 0) {
+        <tr>
+          <td colspan="3" style="text-align: center; padding: 40px; color: #64748b;">No documents analyzed yet. Upload a file to get started!</td>
+        </tr>
+        }
 
-    @for (doc of documents; track doc.id) {
-    <tr style="border-top: 1px solid #eeeeee;">
-      <td style="padding: 15px; font-weight: 500; color: #1565c0;">{{ doc.fileName }}</td>
-      <td style="padding: 15px; color: #616161;">{{ doc.uploadDate | date:'medium':'GMT+3' }}</td>
-      <td style="padding: 15px; text-align: center;">
-        <a [routerLink]="['/analysis', doc.id]" style="background-color: #e3f2fd; color: #1976d2; padding: 8px 16px; text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">View Details</a>
-      </td>
-    </tr>
-    }
-    </tbody>
-  </table>
+        @for (doc of documents; track doc.id) {
+        <tr style="transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+          <td style="padding: 20px; font-weight: 600; color: #1e293b; border-bottom: 1px solid #f1f5f9;">{{ doc.fileName }}</td>
+          <td style="padding: 20px; color: #64748b; border-bottom: 1px solid #f1f5f9;">{{ doc.uploadDate | date:'medium':'GMT+3' }}</td>
+          <td style="padding: 20px; text-align: center; border-bottom: 1px solid #f1f5f9; display: flex; gap: 10px; justify-content: center;">
+            <a [routerLink]="['/analysis', doc.id]" style="background: #e0e7ff; color: #4338ca; padding: 8px 16px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; font-size: 0.9rem;" onmouseover="this.style.background='#c7d2fe'" onmouseout="this.style.background='#e0e7ff'">
+              {{ 'history.btn_view' | translate }}
+            </a>
+            <button (click)="deleteAnalysis(doc.id)" style="background: #fee2e2; color: #b91c1c; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9rem;" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">
+              {{ 'history.btn_delete' | translate }} 🗑️
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,12 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DocumentService } from '../services/document.service';
+import { TranslatePipe } from '../utils/translate.pipe';
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [RouterLink],
-  templateUrl: './detail.html'
+  imports: [RouterLink, TranslatePipe],
+  templateUrl: './detail.html',
+  styleUrl: '../upload/upload.css'
 })
 export class DetailComponent implements OnInit {
   analysisDetail: any = null;

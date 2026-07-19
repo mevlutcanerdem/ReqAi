@@ -1,6 +1,6 @@
 <div class="upload-container">
-  <h2 class="upload-title">Start a New AI Document Analysis</h2>
-  <p class="upload-subtitle">Upload your requirement document and let our Enterprise AI do the heavy lifting.</p>
+  <h2 class="upload-title">{{ 'upload.title' | translate }}</h2>
+  <p class="upload-subtitle">{{ 'upload.subtitle' | translate }}</p>
 
   <div class="upload-card">
     <div class="file-input-wrapper">
@@ -9,13 +9,13 @@
 
     @if (!isAnalyzing) {
     <button (click)="startAnalysis()" [disabled]="!selectedFile" class="btn-primary">
-      🚀 Start AI Analysis
+      {{ 'upload.btn_start' | translate }}
     </button>
     } @else {
     <div class="loading-wrapper">
       <div class="spinner"></div>
-      <p class="loading-text">🧠 AI is processing your document...</p>
-      <span class="loading-subtext">This may take a few seconds depending on document length.</span>
+      <p class="loading-text">{{ 'upload.loading' | translate }}</p>
+      <span class="loading-subtext">{{ 'upload.loading_sub' | translate }}</span>
     </div>
     }
   </div>
@@ -23,16 +23,16 @@
 
 @if (analysisResult && analysisResult.error) {
 <div class="error-card">
-  <h2 class="error-title">❌ Analysis Failed</h2>
+  <h2 class="error-title">{{ 'upload.error_title' | translate }}</h2>
   <p class="error-msg">{{ analysisResult.error }}</p>
-  <p style="color: #7f0000; font-size: 0.95rem;">Please check backend logs or try again.</p>
+  <p style="color: #7f0000; font-size: 0.95rem;">{{ 'upload.error_sub' | translate }}</p>
 </div>
 }
 
 @if (analysisResult && analysisResult.requirements) {
 <div class="results-container">
   <h2 class="results-header">
-    <span>🚀</span> Enterprise AI Analysis Results
+    <span>🚀</span> {{ 'upload.results_title' | translate }}
   </h2>
 
   @for (req of analysisResult.requirements; track $index) {
@@ -40,13 +40,13 @@
     <h3 class="req-title">📋 {{ req.description }}</h3>
 
     <div class="badges">
-      <span class="badge badge-priority">⚡ Priority: {{ req.priority }}</span>
-      <span class="badge badge-complexity">🧠 Complexity: {{ req.complexity }}</span>
+      <span class="badge badge-priority">{{ 'upload.priority' | translate }} {{ req.priority }}</span>
+      <span class="badge badge-complexity">{{ 'upload.complexity' | translate }} {{ req.complexity }}</span>
     </div>
 
     @if (req.tasks && req.tasks.length > 0) {
     <div class="tasks-section">
-      <h4 class="tasks-title">👨‍💻 Developer Tasks</h4>
+      <h4 class="tasks-title">👨‍💻 {{ 'upload.dev_tasks' | translate }}</h4>
 
       @for (task of req.tasks; track $index) {
       <div class="task-item">
@@ -55,12 +55,12 @@
 
         @if (task.testScenarios && task.testScenarios.length > 0) {
         <div class="tests-container">
-          <div class="tests-title">🧪 Test Scenarios</div>
+          <div class="tests-title">🧪 {{ 'upload.test_scenarios' | translate }}</div>
           <ul class="test-list">
             @for (test of task.testScenarios; track $index) {
             <li>
-              <strong>Action:</strong> {{ test.description }} <br>
-              <span class="test-expect"><strong>Expect:</strong> {{ test.expectedResult }}</span>
+              <strong>{{ 'upload.action' | translate }}</strong> {{ test.description }} <br>
+              <span class="test-expect"><strong>{{ 'upload.expect' | translate }}</strong> {{ test.expectedResult }}</span>
             </li>
             }
           </ul>
