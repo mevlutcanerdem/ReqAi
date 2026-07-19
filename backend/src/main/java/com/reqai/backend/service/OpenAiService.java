@@ -121,7 +121,7 @@ public class OpenAiService {
 
         } catch (Exception e) {
             log.error("Error occurred during OpenAI API call or database operation: {}", e.getMessage(), e);
-            throw new RuntimeException("AI Analysis Failed", e);
+            throw new RuntimeException("AI Analysis Failed: " + e.getMessage(), e);
         }
 
     }
