@@ -317,12 +317,11 @@ The project serves as both a practical productivity tool and a showcase of moder
 
 ---
 
-# 👨‍💻 Developer
+# 👨💻 Developer
 
 ## Mevlüt Can Erdem
 
 **Software Development Intern**  
-
 
 ---
 
