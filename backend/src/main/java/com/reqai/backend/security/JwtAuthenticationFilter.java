@@ -1,7 +1,7 @@
 package com.reqai.backend.security;
 
 import com.reqai.backend.entity.User;
-import com.reqai.backend.repository.UserRepository;
+import com.reqai.backend.service.UserCacheService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
+    private final UserCacheService userCacheService;
 
 
     @Override
@@ -60,9 +59,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token.startsWith("reqai_")) {
             try {
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                    Optional<User> optionalUser = userRepository.findByToken(token);
-                    if (optionalUser.isPresent()) {
-                        User user = optionalUser.get();
+                    // Redis'ten oku → yoksa DB'den çek (@Cacheable)
+                    User user = userCacheService.findByToken(token);
+                    if (user != null) {
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 user,
                                 null,

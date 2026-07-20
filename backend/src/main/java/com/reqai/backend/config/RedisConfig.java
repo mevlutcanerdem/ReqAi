@@ -5,9 +5,6 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -21,14 +18,14 @@ public class RedisConfig {
     RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(60))
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()));
+        // Value serializer: varsayılan JDK serialization kullanılır (User implements Serializable)
+        // Jackson serializer Hibernate proxy nesneleriyle çakışma yapabilir
     }
 
     /**
      * Redis bağlantısı koptuğunda uygulamanın çökmesini önler.
      * Cache hatası olursa sessizce loglar ve doğrudan veritabanından devam eder.
-     * Bu sayede Redis opsiyonel hale gelir - varsa hızlandırır, yoksa uygulama yine çalışır.
      */
     @Bean
     public CacheErrorHandler cacheErrorHandler() {
@@ -36,7 +33,6 @@ public class RedisConfig {
             @Override
             public void handleCacheGetError(RuntimeException exception, org.springframework.cache.Cache cache, Object key) {
                 System.err.println("[REDIS-WARN] Cache GET hatası (sessizce atlanıyor): " + exception.getMessage());
-                // Hata fırlatma, veritabanından devam et
             }
 
             @Override

@@ -3,6 +3,7 @@ package com.reqai.backend.auth;
 import com.reqai.backend.entity.User;
 import com.reqai.backend.repository.UserRepository;
 import com.reqai.backend.security.JwtService;
+import com.reqai.backend.service.UserCacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserCacheService userCacheService;
 
     // register process
     @Transactional
@@ -36,8 +38,11 @@ public class AuthenticationService {
         String apiToken = "reqai_" + UUID.randomUUID().toString().replace("-", "");
         user.setToken(apiToken);
 
-        // database e kaydet
+        // 1. Database'e kaydet
         userRepository.save(user);
+
+        // 2. Redis'e de kaydet → Bir sonraki login anında DB'ye gitmeden Redis'ten bulacak
+        userCacheService.cacheAfterRegister(user);
 
         // kayıt olan kullanıcıya kalıcı API token'ını ver
         return new AuthenticationResponse(apiToken);
@@ -66,4 +71,3 @@ public class AuthenticationService {
     }
 
 }
-
