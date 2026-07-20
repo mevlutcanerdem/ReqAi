@@ -16,5 +16,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUsername(String username);
 
     // kalıcı API token ile kullanıcıyı bul
+    @Cacheable(value = "tokens", key = "#token")
     Optional<User> findByToken(String token);
 }

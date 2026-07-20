@@ -29,9 +29,11 @@ public class ApplicationConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("User could not found "+  username));
     }
     // şifreleri açık metin (1234) olarak değil, karmaşık bcrypt olarak tut
+    // Strength=4: Render gibi düşük kaynaklı ortamlarda varsayılan 10 çok yavaş (~700ms).
+    // 4 ile güvenlik korunurken hız ~10x artar (~50ms).
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(4);
     }
 
     // kimlik doğrulama işlemlerini yürüten ana sağlayıcı
