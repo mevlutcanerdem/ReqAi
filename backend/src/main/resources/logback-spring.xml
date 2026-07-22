@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <!-- Spring Boot'un standart konsol loglarını da koruyalım -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- LOKI Appender Ayarları -->
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <!-- Burası Oracle Cloud IP adresi -->
+            <url>http://89.168.88.5:3100/loki/api/v1/push</url>
+        </http>
+
+        <format>
+            <label>
+                <pattern>app=reqai-backend,env=production</pattern>
+            </label>
+            <message>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </message>
+        </format>
+    </appender>
+    <!-- Tüm INFO ve üzeri logları Loki'ye yolla -->
+    <root level="INFO">
+        <appender-ref ref="LOKI" />
+    </root>
+</configuration>
