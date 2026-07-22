@@ -58,6 +58,12 @@ management:
         enabled: true
     tags:
       application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0  #gelen isteklerin %100 ünü takip et
+  otlp:
+    tracing:
+      endpoint: http://89.168.88.5:4318/v1/traces #temponun otlp http portuna 4318 verileri fırlat
 
 openai:
   api:
