@@ -78,12 +78,17 @@
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
 
-		<!-- Actuator -->
+		<!-- Actuator : springboot metriclerini dışarıya açar -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+		<!-- Micrometer : bu metrikleri prometheusun anlayacağı formata JSON yerine metin  çevirir -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
 		<!-- Swagger -->
 		<dependency>
 			<groupId>org.springdoc</groupId>

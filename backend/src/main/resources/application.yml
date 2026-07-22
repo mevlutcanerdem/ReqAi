@@ -44,13 +44,20 @@ spring:
     redis:
       url: ${SPRING_DATA_REDIS_URL:redis://localhost:6379}
 
-
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
-
+        include: "*"
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
 
 openai:
   api:
@@ -62,5 +69,3 @@ logging:
   level:
     org.hibernate.SQL: WARN
     org.hibernate.orm.jdbc.bind: WARN
-
-

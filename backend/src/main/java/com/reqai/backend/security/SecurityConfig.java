@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                         // Spring'in hata sayfasına da erişime izin ver (aksi halde controller hatası 403 olarak maskelenir)
                                 .requestMatchers("/error").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
                         // geri kalan tüm isteklere token şart (belge yükleme / geçmiş görüntüleme)
                                 .anyRequest().authenticated()
 
