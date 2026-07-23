@@ -60,10 +60,10 @@ management:
       application: ${spring.application.name}
   tracing:
     sampling:
-      probability: 1.0  #gelen isteklerin %100 ünü takip et
+      probability: 1.0  # gelen isteklerin %100'ünü takip et
   otlp:
     tracing:
-      endpoint: http://89.168.88.5:4318/v1/traces #temponun otlp http portuna 4318 verileri fırlat
+      endpoint: http://89.168.88.5:4318/v1/traces # Tempo'nun OTLP HTTP portuna verileri fırlat
 
 openai:
   api:
@@ -71,7 +71,11 @@ openai:
     key: ${OPENAI_API_KEY}
     model: llama-3.3-70b-versatile
 
+# TÜM LOG AYARLARINI BURADA TEK ÇATIDA BİRLEŞTİRDİK
 logging:
+  pattern:
+    # trace id ekrana basılsın span id ile
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
     org.hibernate.SQL: WARN
     org.hibernate.orm.jdbc.bind: WARN
