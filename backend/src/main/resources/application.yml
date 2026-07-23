@@ -75,7 +75,7 @@ openai:
 logging:
   pattern:
     # trace id ekrana basılsın span id ile
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - [traceId=%X{traceId:-}, spanId=%X{spanId:-}] - %msg%n"
   level:
     org.hibernate.SQL: WARN
     org.hibernate.orm.jdbc.bind: WARN
