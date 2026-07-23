@@ -9,6 +9,13 @@
 ![Apache Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
+**Cloud Infrastructure:**
+<br>
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
+![Upstash](https://img.shields.io/badge/Upstash-00E9A3?style=for-the-badge&logo=redis&logoColor=white)
+![Confluent](https://img.shields.io/badge/Confluent-FFFFFF?style=for-the-badge&logo=apache-kafka&logoColor=black)
 ![Oracle](https://img.shields.io/badge/Oracle_Cloud-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)
 ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
@@ -31,7 +38,7 @@ Instead of manually reading lengthy requirement documents, project teams can ins
 - 💻 Developer Tasks
 - ✅ Test Scenarios
 
-Beyond traditional CRUD operations, ReqAI is engineered for **high-performance**, **fault tolerance**, and **enterprise scalability** using asynchronous processing, event-driven architecture, caching mechanisms, real-time streaming technologies, and a complete observability stack hosted on Oracle Cloud.
+Beyond traditional CRUD operations, ReqAI is engineered for **high-performance**, **fault tolerance**, and **enterprise scalability** using asynchronous processing, event-driven architecture, caching mechanisms, real-time streaming technologies, and a distributed multi-cloud architecture.
 
 ---
 
@@ -66,16 +73,21 @@ This significantly reduces analysis time while increasing consistency and develo
 
 ReqAI follows modern enterprise software architecture principles to ensure reliability, scalability, and maintainability.
 
-## Cloud Infrastructure & Observability
+## Distributed Cloud Infrastructure & Observability
 
-The platform is deployed on a robust **Oracle Cloud** infrastructure, ensuring high availability and seamless scaling. To maintain complete visibility into the system's health and performance, ReqAI integrates a state-of-the-art observability stack:
+ReqAI adopts a truly modern, distributed multi-cloud strategy to optimize cost, performance, and reliability across specialized providers:
 
-- **Grafana**: Acts as the central dashboard for visualizing all telemetry data in one place.
-- **Prometheus**: Collects and stores vital system and application metrics, enabling proactive monitoring.
-- **Grafana Loki**: Aggregates and indexes logs from all services for lightning-fast troubleshooting.
-- **Grafana Tempo**: Provides distributed tracing to track requests as they flow across components and asynchronous processes (like Kafka events).
+- **Frontend (Vercel):** The Angular SPA is hosted on Vercel for lightning-fast global edge delivery.
+- **Backend (Render):** The Spring Boot application runs on Render, providing robust computational power.
+- **Messaging (Confluent Cloud):** Apache Kafka event streaming is managed by Confluent for enterprise-grade message delivery.
+- **Caching (Upstash):** Serverless Redis caching is powered by Upstash for ultra-low latency data retrieval.
+- **Observability (Oracle Cloud):** A dedicated Oracle Cloud instance hosts our complete observability stack:
+  - **Grafana**: Central dashboard for visualizing all telemetry data in one place.
+  - **Prometheus**: Collects and stores vital system and application metrics, enabling proactive monitoring.
+  - **Grafana Loki**: Aggregates and indexes logs from all services for lightning-fast troubleshooting.
+  - **Grafana Tempo**: Provides distributed tracing to track requests as they flow across components and asynchronous processes (like Kafka events).
 
-This full-stack observability ensures that performance bottlenecks and errors are detected and resolved instantly.
+This best-of-breed cloud architecture ensures performance bottlenecks and errors are detected and resolved instantly while keeping infrastructure costs optimized.
 
 ---
 
@@ -190,14 +202,13 @@ Users can:
 
 | Layer | Technologies |
 |--------|--------------|
-| Frontend | Angular 17, TypeScript |
-| Backend | Java 17, Spring Boot 3 |
+| Frontend | Angular 17, TypeScript (Hosted on **Vercel**) |
+| Backend | Java 17, Spring Boot 3 (Hosted on **Render**) |
 | Database | PostgreSQL |
-| Messaging | Apache Kafka |
-| Cache | Redis |
+| Messaging | Apache Kafka (Managed by **Confluent Cloud**) |
+| Cache | Redis (Managed by **Upstash**) |
 | Streaming | Server-Sent Events (SSE) |
-| Observability | Grafana, Prometheus, Loki, Tempo |
-| Cloud Hosting | Oracle Cloud Infrastructure |
+| Observability | Grafana, Prometheus, Loki, Tempo (Hosted on **Oracle Cloud**) |
 | Infrastructure | Docker, Docker Compose |
 | AI Integration | OpenAI API |
 
@@ -311,9 +322,9 @@ http://localhost:4200
 
 ✅ Transactional Outbox Pattern
 
-✅ Comprehensive Observability (Metrics, Logs, Traces)
+✅ Distributed Multi-Cloud Architecture (Vercel, Render, Oracle, Confluent, Upstash)
 
-✅ Oracle Cloud Deployment
+✅ Comprehensive Observability (Metrics, Logs, Traces)
 
 ✅ Dockerized Infrastructure
 
@@ -336,6 +347,7 @@ ReqAI demonstrates several enterprise software engineering concepts frequently u
 - Caching Strategies
 - AI Integration
 - Full-Stack Observability
+- Multi-Cloud Deployment Strategy
 - Containerized Deployment
 
 The project serves as both a practical productivity tool and a showcase of modern backend engineering practices.
